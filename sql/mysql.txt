@@ -1,0 +1,79 @@
+-- 冥想问题库表
+CREATE TABLE meditation_ask (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    meditation_id VARCHAR(255) NOT NULL COMMENT '冥想ID/关联ID(使用ChromaDB原始ID)',
+    question TEXT NOT NULL COMMENT '问题内容',
+    create_by BIGINT NOT NULL COMMENT '创建人ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    INDEX idx_meditation_id (meditation_id),
+    INDEX idx_create_time (create_time),
+    INDEX idx_create_by (create_by)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='冥想问题库';
+
+-- 冥想音乐曲目库表
+CREATE TABLE meditation_plays (
+    id VARCHAR(255) PRIMARY KEY COMMENT '主键ID(使用ChromaDB原始ID)',
+    description TEXT COMMENT '曲目描述',
+    attached VARCHAR(500) COMMENT '附件路径/URL',
+    create_by BIGINT NOT NULL COMMENT '创建人ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    completion_rate DECIMAL(5,2) DEFAULT 0.00 COMMENT '播放完整度(100分满分)',
+    INDEX idx_create_by (create_by),
+    INDEX idx_create_time (create_time),
+    INDEX idx_completion_rate (completion_rate)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='冥想音乐曲目库';
+
+-- 冥想播放日志表
+CREATE TABLE meditation_play_logs (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    content TEXT COMMENT '沟通内容',
+    play_id VARCHAR(255) NOT NULL COMMENT '播放的曲目ID(使用ChromaDB原始ID)',
+    play_time INT DEFAULT 0 COMMENT '播放时长(秒)',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    create_by BIGINT COMMENT '创建人ID',
+    INDEX idx_user_id (user_id),
+    INDEX idx_play_id (play_id),
+    INDEX idx_create_time (create_time),
+    INDEX idx_user_play (user_id, play_id),
+    FOREIGN KEY (play_id) REFERENCES meditation_plays(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='冥想播放日志';
+
+-- 冥想纯音乐素材表
+CREATE TABLE meditation_backgrounds (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    title VARCHAR(200) NOT NULL COMMENT '素材标题',
+    tags VARCHAR(300) COMMENT '标签(多个用逗号分隔)',
+    attached VARCHAR(500) COMMENT '附件路径/URL',
+    create_by BIGINT NOT NULL COMMENT '创建人ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间', 
+    INDEX idx_title (title),
+    INDEX idx_create_by (create_by),
+    INDEX idx_create_time (create_time),
+    FULLTEXT INDEX idx_tags (tags) COMMENT '全文索引用于标签搜索'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='冥想纯音乐素材库';
+
+
+
+-- 添加外键约束（如果需要更严格的关联）
+ALTER TABLE meditation_ask ADD CONSTRAINT fk_ask_meditation 
+    FOREIGN KEY (meditation_id) REFERENCES meditation_plays(id) ON DELETE CASCADE;
+
+ALTER TABLE meditation_play_logs ADD CONSTRAINT fk_logs_play 
+    FOREIGN KEY (play_id) REFERENCES meditation_plays(id) ON DELETE CASCADE;
+
+-- 插入示例数据（注意：实际使用时应该使用ChromaDB的真实ID）
+INSERT INTO meditation_plays (id, description, attached, create_by, completion_rate) VALUES
+('sample_id_1', '清晨冥想音乐', '/music/morning.mp3', 1, 95.50),
+('sample_id_2', '深度放松曲目', '/music/relaxing.mp3', 1, 88.75),
+('sample_id_3', '专注力提升音乐', '/music/focus.mp3', 1, 92.00);
+
+INSERT INTO meditation_ask (meditation_id, question, create_by) VALUES
+('sample_id_1', '在冥想过程中你感受到了什么？', 1),
+('sample_id_1', '音乐对你的冥想有什么帮助？', 1),
+('sample_id_2', '这次冥想后你的身心状态如何？', 1);
+
+INSERT INTO meditation_backgrounds (title, tags, attached, create_by) VALUES
+('自然雨声', '自然,雨声,放松', '/backgrounds/rain.mp3', 1),
+('海浪声', '海洋,波浪,冥想', '/backgrounds/ocean.mp3', 1),
+('森林鸟鸣', '自然,森林,鸟鸣', '/backgrounds/forest.mp3', 1);

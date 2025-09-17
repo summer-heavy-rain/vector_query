@@ -1,0 +1,4 @@
+__pycache__/  # 忽略所有 Python 字节码缓存目录
+*.pyc         # 忽略所有 .pyc 编译文件
+.vscode/      # 忽略 VS Code 配置文件夹
+chroma_db/    # 忽略掉生成好的向量库
