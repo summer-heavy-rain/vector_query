@@ -4,7 +4,7 @@ import json
 
 
 # 连接到已存在的Chroma数据库
-client = chromadb.PersistentClient(path="E:/chroma_demo/chroma_db")
+client = chromadb.PersistentClient(path="/www/wwwroot/vector_query/chroma_db")
 
 # 获取已存在的集合
 collection = client.get_collection(name="meditation_collection")

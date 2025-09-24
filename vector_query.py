@@ -8,7 +8,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 # 连接ChromaDB
-client = chromadb.PersistentClient(path="E:/chroma_demo/chroma_db")
+client = chromadb.PersistentClient(path="/www/wwwroot/vector_query/chroma_db")
 collection = client.get_collection(name="meditation_collection")
 
 @router.get("/")

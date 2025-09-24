@@ -52,28 +52,3 @@ CREATE TABLE meditation_backgrounds (
     INDEX idx_create_time (create_time),
     FULLTEXT INDEX idx_tags (tags) COMMENT '全文索引用于标签搜索'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='冥想纯音乐素材库';
-
-
-
--- 添加外键约束（如果需要更严格的关联）
-ALTER TABLE meditation_ask ADD CONSTRAINT fk_ask_meditation 
-    FOREIGN KEY (meditation_id) REFERENCES meditation_plays(id) ON DELETE CASCADE;
-
-ALTER TABLE meditation_play_logs ADD CONSTRAINT fk_logs_play 
-    FOREIGN KEY (play_id) REFERENCES meditation_plays(id) ON DELETE CASCADE;
-
--- 插入示例数据（注意：实际使用时应该使用ChromaDB的真实ID）
-INSERT INTO meditation_plays (id, description, attached, create_by, completion_rate) VALUES
-('sample_id_1', '清晨冥想音乐', '/music/morning.mp3', 1, 95.50),
-('sample_id_2', '深度放松曲目', '/music/relaxing.mp3', 1, 88.75),
-('sample_id_3', '专注力提升音乐', '/music/focus.mp3', 1, 92.00);
-
-INSERT INTO meditation_ask (meditation_id, question, create_by) VALUES
-('sample_id_1', '在冥想过程中你感受到了什么？', 1),
-('sample_id_1', '音乐对你的冥想有什么帮助？', 1),
-('sample_id_2', '这次冥想后你的身心状态如何？', 1);
-
-INSERT INTO meditation_backgrounds (title, tags, attached, create_by) VALUES
-('自然雨声', '自然,雨声,放松', '/backgrounds/rain.mp3', 1),
-('海浪声', '海洋,波浪,冥想', '/backgrounds/ocean.mp3', 1),
-('森林鸟鸣', '自然,森林,鸟鸣', '/backgrounds/forest.mp3', 1);

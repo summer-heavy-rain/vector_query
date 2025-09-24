@@ -3,11 +3,12 @@ import os
 import glob
 import hashlib
 
-client = chromadb.PersistentClient(path="E:/chroma_demo/chroma_db")
+# 数据库路径: /www/wwwroot/vector_query/chroma_db
+client = chromadb.PersistentClient(path="/www/wwwroot/vector_query/chroma_db")
 collection = client.create_collection(name="meditation_collection")
 
 # 读取meditationDocuments目录下的所有txt文件
-documents_dir = "E:/chroma_demo/meditationDocuments"
+documents_dir = "/www/wwwroot/vector_query/meditationDocuments"
 txt_files = glob.glob(os.path.join(documents_dir, "*.txt"))
 
 documents = []
@@ -25,16 +26,12 @@ for file_path in txt_files:
     # 使用内容哈希作为ID
     # 不使用uuid，用hash去检测重复
     doc_id = hashlib.md5(content.encode('utf-8')).hexdigest()
-    
-    # 构建对应的音频文件路径
-    audio_file = os.path.join("E:/chroma_demo/meditationAudios", filename)
-    
+ 
     # 添加到列表中
     documents.append(content)
     metadatas.append({
         "filename": filename,
-        "tags": "",
-        "audio_key": audio_file
+        "tags": ""
     })
     ids.append(doc_id)
 

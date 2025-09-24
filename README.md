@@ -17,4 +17,4 @@
 
 
 附：
-http://localhost:8000/docs：查看当前api的swagger文档
+http://localhost:8000/docs：Fastapi提供的查看当前所有api的swagger文档

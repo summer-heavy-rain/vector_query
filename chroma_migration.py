@@ -5,14 +5,14 @@ import mysql.connector
 from datetime import datetime
 
 # 连接到chroma数据库
-client = chromadb.PersistentClient(path="E:/chroma_demo/chroma_db")
+client = chromadb.PersistentClient(path="/www/wwwroot/vector_query/chroma_db")
 collection = client.get_collection(name="meditation_collection")
 
-# MySQL数据库配置
+# MySQL数据库配置 - 线上环境
 mysql_config = {
-    'host': 'localhost',
+    'host': 'localhost',  # 如果线上数据库在其他服务器，需要修改为对应的IP或域名
     'user': 'root',
-    'password': 'root',
+    'password': 'MySKjskdfass123!',
     'database': 'chromaset',
     'charset': 'utf8mb4'
 }
